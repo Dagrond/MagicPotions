@@ -1,9 +1,7 @@
 package com.gmail.ZiomuuSs.Effects;
 
-import com.gmail.ZiomuuSs.Effect;
-
 public class ManaEffect extends Effect{
-  public ManaEffect () {
-    
+  public ManaEffect (String instruction, int value, int chance, boolean stop) {
+    super(instruction, value, chance, stop);
   }
 }

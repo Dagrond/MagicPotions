@@ -1,6 +1,5 @@
 package com.gmail.ZiomuuSs.Utils;
 
-import com.gmail.ZiomuuSs.Effect;
 import com.gmail.ZiomuuSs.MagicPotion;
 import com.gmail.ZiomuuSs.Main;
 import java.util.ArrayList;
