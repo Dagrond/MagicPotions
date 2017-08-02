@@ -1,0 +1,8 @@
+name: MagicPotions
+main: com.gmail.ZiomuuSs.Main
+version: 0.1
+commands:
+   MagicPotions:
+      aliases: [mp]
+      description: Glowna komenda.
+      usage: /mp

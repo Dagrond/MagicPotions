@@ -1,0 +1,27 @@
+potions:
+# This name is only for /pt get command.
+  example:
+    # Material of potion, MUST BE CONSUMEABLE
+    id: 373
+    # Data of potion
+    data: 0
+    # Display name of potion
+    name: '&9&lSmall Mana Potion'
+    # Lore of potion
+    lore:
+    - '&5&oRestores 50'
+    - '&5&omana points.'
+    # List of all efects applied to player after consume potion. Currently avaible effects: mana
+    effects:
+      mana:
+        value: 50
+        chance: 80%
+        stop: true
+      potion:
+        type: invisibility
+        value: 2
+        time: 100
+    # Should delete this potion after use?
+    delete: true
+    # Permissions to consume this potion. Every permission has prefix: "magicpotions.potion."
+    permission: example
