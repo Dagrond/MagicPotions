@@ -8,11 +8,13 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
 
+import com.gmail.ZiomuuSs.Effects.Effect;
+
 public class MagicPotion implements Listener{
   public Main plugin;
   private ItemStack item;
   private String permission = null;
-  private ArrayList<Object> effects;
+  private ArrayList<Effect> effects;
 
   public MagicPotion(Main instance, ItemStack item) {
     plugin = instance;
@@ -25,12 +27,16 @@ public class MagicPotion implements Listener{
     if (e.getItem().equals(this.item)) {
       Player player = e.getPlayer();
       if (this.permission == null || player.hasPermission(permission)) {
-        player.sendMessage(effects+"");
+        for (Effect effect: effects) {
+         effect.execute(player);
+         if (effect.isStop())
+           break;
+        }
       }
     }
   }
 
-  public void setEffects (ArrayList<Object> effects) {
+  public void setEffects (ArrayList<Effect> effects) {
     this.effects = effects;
   }
 

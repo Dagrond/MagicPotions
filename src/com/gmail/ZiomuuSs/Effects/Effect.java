@@ -5,16 +5,29 @@ import org.bukkit.entity.Player;
 public abstract class Effect {
   protected int value;
   protected String instruction;
-  protected int chance;
-  protected boolean stop;
+  protected int chance = 100;
+  protected boolean stop = false;
+  protected String message = null;
   
-  public Effect (String instruction, int value, int chance, boolean stop) {
-    this.instruction = instruction;
-    this.value = value;
+  public void setChance (int chance) {
     this.chance = chance;
+  }
+  
+  public void setStoppable (boolean stop) {
     this.stop = stop;
   }
   
-  protected void execute (Player player) {}
+  public void setMessage (String message) {
+    this.message = message;
+  }
   
+  public void execute (Player player) {
+    if (message != null) {
+      player.sendMessage(message);
+    }
+  }
+  
+  public boolean isStop () {
+    return stop;
+  }
 }

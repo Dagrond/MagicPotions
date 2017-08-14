@@ -13,7 +13,7 @@ public class Messages {
     messages = plugin.messages;
   }
 
-  public String getMessage(String path, boolean prefix, String ... opt) {
+  public String getMessage(String path, boolean prefix, String...opt) {
     String msg = messages.getString(path);
     if (prefix) {
       msg = messages.getString("prefix")+" "+msg;

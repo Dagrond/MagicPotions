@@ -1,13 +1,11 @@
 package com.gmail.ZiomuuSs.Utils;
 
-import com.gmail.ZiomuuSs.MagicPotion;
-import com.gmail.ZiomuuSs.Main;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -16,9 +14,13 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.MaterialData;
 
+import com.gmail.ZiomuuSs.MagicPotion;
+import com.gmail.ZiomuuSs.Main;
+import com.gmail.ZiomuuSs.Effects.Effect;
+import com.gmail.ZiomuuSs.Effects.ManaEffect;
+
 public class LoadPotions {
   public Main plugin;
-  private final List<String> EFFECT = Arrays.asList("mana", "potion");
   private static final Logger LOG = Bukkit.getLogger();
   private FileConfiguration potions;
   public HashMap<String, MagicPotion> MagicPotions = new HashMap<String, MagicPotion>();
@@ -44,7 +46,7 @@ public class LoadPotions {
         
         i++;
       } else {
-        throwError("Invalid Material", potion, null);
+        throwError("Invalid Material", potion);
       }
     }
     loaded = i;
@@ -63,25 +65,59 @@ public class LoadPotions {
     return item;
   }
 
-  private ArrayList<Object> parseEffects(String path) {
-    path = "potions."+path+".effects";
-    ArrayList<Object> effects = new ArrayList<Object>();
+  private ArrayList<Effect> parseEffects(String potion) {
+    String path = "potions."+potion+".effects";
+    ArrayList<Effect> effects = new ArrayList<Effect>();
     for (String effect : potions.getConfigurationSection(path).getKeys(false)) {
-      try {
-        effects.add(Class.forName(effect).newInstance());
-      } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
-        throwError ("Invalid Effect", path, effect);
+      Effect eff;
+      switch (effect.toLowerCase()) {
+      case "mana":
+        if (potions.isInt(path+"."+effect+".value")) {
+          eff = new ManaEffect(potions.getInt(path+"."+effect+".value"));
+        } else {
+          throwError("Missing required", potion, effect, "value");
+          break;
+        }
+        eff = parseAdditionalArguments(eff, path+"."+effect);
+        effects.add(eff);
+        break;
+      case "health":
+        if (potions.isInt(path+"."+effect+".value")) {
+          //eff = new HealthEffect(potions.getInt(path+"."+effect+".value"))
+        }
+        //eff = parseAdditionalArguments(eff, path+"."+effect);
+        //effects.add(eff);
+        break;
+      default:
+        throwError("Invalid Effect", potion, effect);
+        break;
       }
     }
     return effects;
   }
 
-  private void throwError (String cause, String potion, String additional) {
+  private Effect parseAdditionalArguments (Effect effect, String path) {
+    if (potions.isBoolean(path+".stop")) {
+      effect.setStoppable(potions.getBoolean(path+".stop"));
+    }
+    if (potions.isInt(path+".chance")) {
+      effect.setChance(potions.getInt(path+".chance"));
+    }
+    if (potions.isString(path+".message")) {
+      effect.setMessage(potions.getString(path+".message"));
+    }
+    return effect;
+  }
+
+  private void throwError (String cause, String potion, String...additional) {
     LOG.log(Level.SEVERE, "Error loading "+potion+": ");
     if (cause.equalsIgnoreCase("Invalid Material")) {
       LOG.log(Level.SEVERE, "Material for potion must be consumeable!");
     } else if (cause.equalsIgnoreCase("Invalid Effect")) {
-      LOG.log(Level.SEVERE, "There is no effect called "+additional+"!");
+      LOG.log(Level.SEVERE, "There is no effect called "+additional[0]+"!");
+    } else if (cause.equalsIgnoreCase("Missing required")) {
+      LOG.log(Level.SEVERE, "Cannot parse effect "+additional[0]+":");
+      LOG.log(Level.SEVERE, "Missing required section: "+additional[1]+"!");
     }
   }
 
