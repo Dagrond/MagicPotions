@@ -37,7 +37,7 @@ public class LoadPotions {
     total = potions.size();
     int i = 0;
     for (String potion: potions) {
-      ItemStack it = createItem(this.potions.getString("potions."+potion+".name"), this.potions.getList("potions."+potion+".lore"), this.potions.getInt("potions."+potion+".id"), this.potions.getInt("potions."+potion+".data"));
+      ItemStack it = createItem(this.potions.getString("potions."+potion+".name"), (List<String>) this.potions.getList("potions."+potion+".lore"), this.potions.getInt("potions."+potion+".id"), this.potions.getInt("potions."+potion+".data"));
       if (it.getType().isEdible() || it.getType().equals(Material.POTION)) {
         MagicPotions.put(potion, new MagicPotion(this.plugin, it));
         MagicPotions.get(potion).setEffects(parseEffects(potion));
@@ -54,15 +54,19 @@ public class LoadPotions {
     LOG.info("Loaded "+loaded+"/"+total+" potions!");
   }
 
-  private ItemStack createItem(String name, List lore, int ID, int data) {
+  private ItemStack createItem(String name, List<String> lore, int ID, int data) {
     ItemStack item = new ItemStack(Material.getMaterial(ID));
     ItemMeta meta = item.getItemMeta();
     meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', name));
+    for (int i = 0; i < lore.size(); i++) {
+      lore.set(i, ChatColor.translateAlternateColorCodes('&', lore.get(i)));
+    }
     meta.setLore(lore);
     item.setItemMeta(meta);
     MaterialData mt = item.getData();
     mt.setData((byte) data);
     item.setData(mt);
+    item.setAmount(1);
     return item;
   }
 

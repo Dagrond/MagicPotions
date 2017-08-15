@@ -1,5 +1,6 @@
 package com.gmail.ZiomuuSs.Effects;
 
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 public abstract class Effect {
@@ -23,7 +24,7 @@ public abstract class Effect {
   
   public void execute (Player player) {
     if (message != null) {
-      player.sendMessage(message);
+      player.sendMessage(ChatColor.translateAlternateColorCodes('&', message));
     }
   }
   
