@@ -30,4 +30,8 @@ public abstract class Effect {
   public boolean isStop () {
     return stop;
   }
+  
+  public boolean isCorrect () {
+    return false;
+  }
 }

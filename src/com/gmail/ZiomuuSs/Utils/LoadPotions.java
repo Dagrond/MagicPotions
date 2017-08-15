@@ -22,6 +22,7 @@ import com.gmail.ZiomuuSs.Effects.ManaEffect;
 public class LoadPotions {
   public Main plugin;
   private static final Logger LOG = Bukkit.getLogger();
+  private static ThrowError Error = new ThrowError();
   private FileConfiguration potions;
   public HashMap<String, MagicPotion> MagicPotions = new HashMap<String, MagicPotion>();
   public int total;
@@ -46,7 +47,7 @@ public class LoadPotions {
         
         i++;
       } else {
-        throwError("Invalid Material", potion);
+        Error.show("Invalid Material", potion);
       }
     }
     loaded = i;
@@ -75,7 +76,7 @@ public class LoadPotions {
         if (potions.isInt(path+"."+effect+".value")) {
           eff = new ManaEffect(potions.getInt(path+"."+effect+".value"));
         } else {
-          throwError("Missing required", potion, effect, "value");
+          Error.show("Missing required", potion, effect, "value");
           break;
         }
         eff = parseAdditionalArguments(eff, path+"."+effect);
@@ -89,7 +90,7 @@ public class LoadPotions {
         //effects.add(eff);
         break;
       default:
-        throwError("Invalid Effect", potion, effect);
+        Error.show("Invalid Effect", potion, effect);
         break;
       }
     }
@@ -107,18 +108,6 @@ public class LoadPotions {
       effect.setMessage(potions.getString(path+".message"));
     }
     return effect;
-  }
-
-  private void throwError (String cause, String potion, String...additional) {
-    LOG.log(Level.SEVERE, "Error loading "+potion+": ");
-    if (cause.equalsIgnoreCase("Invalid Material")) {
-      LOG.log(Level.SEVERE, "Material for potion must be consumeable!");
-    } else if (cause.equalsIgnoreCase("Invalid Effect")) {
-      LOG.log(Level.SEVERE, "There is no effect called "+additional[0]+"!");
-    } else if (cause.equalsIgnoreCase("Missing required")) {
-      LOG.log(Level.SEVERE, "Cannot parse effect "+additional[0]+":");
-      LOG.log(Level.SEVERE, "Missing required section: "+additional[1]+"!");
-    }
   }
 
   public MagicPotion getPotion (String name) {
