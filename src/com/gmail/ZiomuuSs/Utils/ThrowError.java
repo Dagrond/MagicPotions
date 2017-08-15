@@ -18,6 +18,9 @@ public final class ThrowError {
     } else if (cause.equalsIgnoreCase("Missing required")) {
       LOG.log(Level.SEVERE, "[MagicPotions] Cannot parse effect "+additional[0]+":");
       LOG.log(Level.SEVERE, "[MagicPotions] Missing required section: "+additional[1]+"!");
+    } else if (cause.equalsIgnoreCase("Invalid potion")) {
+      LOG.log(Level.SEVERE, "[MagicPotions] Cannot parse effect "+additional[0]+":");
+      LOG.log(Level.SEVERE, "[MagicPotions] Invalid potion effect: "+additional[1]+"!");
     }
   }
 }

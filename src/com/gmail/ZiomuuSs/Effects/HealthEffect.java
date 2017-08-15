@@ -13,7 +13,11 @@ public class HealthEffect extends Effect {
   public void execute (Player player) {
     if ((Math.random() * 100) <= chance) {
       super.execute(player);
-      player.setHealth(player.getHealth()+value);
+      if (player.getMaxHealth() < player.getHealth()+value) {
+        player.setHealth(player.getMaxHealth());
+      } else {
+        player.setHealth(player.getHealth()+value);
+      }
     }
   }
 }

@@ -5,7 +5,6 @@ import org.bukkit.entity.Player;
 
 public abstract class Effect {
   protected int value;
-  protected String instruction;
   protected int chance = 100;
   protected boolean stop = false;
   protected String message = null;

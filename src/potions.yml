@@ -21,7 +21,3 @@ potions:
         type: invisibility
         value: 2
         time: 100
-    # Should delete this potion after use?
-    delete: true
-    # Permissions to consume this potion. Every permission has prefix: "magicpotions.potion."
-    permission: example

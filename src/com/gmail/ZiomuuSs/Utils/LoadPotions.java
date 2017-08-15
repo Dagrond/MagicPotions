@@ -9,15 +9,18 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.MaterialData;
+import org.bukkit.potion.PotionEffectType;
 
 import com.gmail.ZiomuuSs.MagicPotion;
 import com.gmail.ZiomuuSs.Main;
 import com.gmail.ZiomuuSs.Effects.Effect;
 import com.gmail.ZiomuuSs.Effects.HealthEffect;
 import com.gmail.ZiomuuSs.Effects.ManaEffect;
+import com.gmail.ZiomuuSs.Effects.PotionEffects;
 
 public class LoadPotions {
   public Main plugin;
@@ -55,18 +58,18 @@ public class LoadPotions {
   }
 
   private ItemStack createItem(String name, List<String> lore, int ID, int data) {
-    ItemStack item = new ItemStack(Material.getMaterial(ID));
+    ItemStack item = new ItemStack(Material.getMaterial(ID), 1);
     ItemMeta meta = item.getItemMeta();
     meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', name));
     for (int i = 0; i < lore.size(); i++) {
       lore.set(i, ChatColor.translateAlternateColorCodes('&', lore.get(i)));
     }
     meta.setLore(lore);
+    meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
     item.setItemMeta(meta);
     MaterialData mt = item.getData();
     mt.setData((byte) data);
     item.setData(mt);
-    item.setAmount(1);
     return item;
   }
 
@@ -93,6 +96,31 @@ public class LoadPotions {
         eff = parseAdditionalArguments(eff, path+"."+effect);
         effects.add(eff);
         break;
+      case "potion":
+        if (potions.isInt(path+"."+effect+".value")) {
+          if (potions.isString(path+"."+effect+".type")) {
+            if (PotionEffectType.getByName(potions.getString(path+"."+effect+".type").toUpperCase()) != null) {
+              if (potions.isInt(path+"."+effect+".time")) {
+                eff = new PotionEffects(potions.getInt(path+"."+effect+".value"), potions.getString(path+"."+effect+".type"), potions.getInt(path+"."+effect+".time"));
+                eff = parseAdditionalArguments(eff, path+"."+effect);
+                effects.add(eff);
+              break;
+              } else {
+                Error.show("Missing required", potion, effect, "time");
+                break;
+              }
+            } else {
+              Error.show("Invalid Potion", potion, effect, potions.getString(path+"."+effect+".type").toUpperCase());
+              break;
+            }
+          } else {
+            Error.show("Missing required", potion, effect, "type");
+            break;
+          }
+        } else {
+          Error.show("Missing required", potion, effect, "value");
+          break;
+        }
       default:
         Error.show("Invalid Effect", potion, effect);
         break;

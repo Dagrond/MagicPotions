@@ -32,7 +32,7 @@ public class MagicPotion implements Listener{
          if (effect.isStop())
            break;
         }
-        player.getInventory().remove(item);
+        player.getInventory().removeItem(item);
         e.setCancelled(true);
       }
     }
