@@ -3,7 +3,6 @@ package com.gmail.ZiomuuSs.Utils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
@@ -17,6 +16,7 @@ import org.bukkit.material.MaterialData;
 import com.gmail.ZiomuuSs.MagicPotion;
 import com.gmail.ZiomuuSs.Main;
 import com.gmail.ZiomuuSs.Effects.Effect;
+import com.gmail.ZiomuuSs.Effects.HealthEffect;
 import com.gmail.ZiomuuSs.Effects.ManaEffect;
 
 public class LoadPotions {
@@ -69,8 +69,8 @@ public class LoadPotions {
   private ArrayList<Effect> parseEffects(String potion) {
     String path = "potions."+potion+".effects";
     ArrayList<Effect> effects = new ArrayList<Effect>();
+    Effect eff = null;
     for (String effect : potions.getConfigurationSection(path).getKeys(false)) {
-      Effect eff;
       switch (effect.toLowerCase()) {
       case "mana":
         if (potions.isInt(path+"."+effect+".value")) {
@@ -84,10 +84,10 @@ public class LoadPotions {
         break;
       case "health":
         if (potions.isInt(path+"."+effect+".value")) {
-          //eff = new HealthEffect(potions.getInt(path+"."+effect+".value"))
+          eff = new HealthEffect(potions.getInt(path+"."+effect+".value"));
         }
-        //eff = parseAdditionalArguments(eff, path+"."+effect);
-        //effects.add(eff);
+        eff = parseAdditionalArguments(eff, path+"."+effect);
+        effects.add(eff);
         break;
       default:
         Error.show("Invalid Effect", potion, effect);

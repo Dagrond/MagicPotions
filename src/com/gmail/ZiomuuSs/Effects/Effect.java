@@ -31,7 +31,4 @@ public abstract class Effect {
     return stop;
   }
   
-  public boolean isCorrect () {
-    return false;
-  }
 }
